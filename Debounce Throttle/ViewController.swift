@@ -12,15 +12,14 @@ import RxGesture
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var draggableView: UIView!
+    let disposeBag = DisposeBag()
     
+    @IBOutlet weak var draggableView: UIView!
     @IBOutlet weak var throttleStack: UIStackView!
     @IBOutlet weak var debounceStack: UIStackView!
     @IBOutlet weak var regularStack: UIStackView!
     
-    let disposeBag = DisposeBag()
-    
-    let change = PublishSubject<Void>()
+    let event = PublishSubject<Void>()
     
     var regular = 0
     var debounce = 0
@@ -31,18 +30,17 @@ class ViewController: UIViewController {
         prepareStackViews()
         setupGesture()
         setupEventSubscriptions()
-        
     }
     
     func setupEventSubscriptions() {
-        change.subscribe(onNext: { [self] _ in
+        event.subscribe(onNext: { [self] _ in
             if regular < regularStack.arrangedSubviews.count {
                 regularStack.arrangedSubviews[regular].isHidden = false
             }
         })
         .disposed(by: disposeBag)
         
-        change
+        event
             .debounce(.microseconds(50000), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [self] _ in
                 if debounce < debounceStack.arrangedSubviews.count {
@@ -51,7 +49,7 @@ class ViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        change
+        event
             .throttle(.microseconds(50000), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [self] _ in
                 if throttle < throttleStack.arrangedSubviews.count {
@@ -72,28 +70,9 @@ class ViewController: UIViewController {
             .subscribe(onNext: { [self] translation, _ in
                 draggableView.transform = CGAffineTransform(translationX: translation.x, y: translation.y)
                 
-                if regular >= regularStack.arrangedSubviews.count - 1 {
-                    regular = 0
-                    clearStack(stack: regularStack)
-                } else {
-                    regular += 1
-                }
+                handleCounts()
                 
-                if debounce >= debounceStack.arrangedSubviews.count - 1 {
-                    debounce = 0
-                    clearStack(stack: debounceStack)
-                } else {
-                    debounce += 1
-                }
-                
-                if throttle >= throttleStack.arrangedSubviews.count - 1 {
-                    throttle = 0
-                    clearStack(stack: throttleStack)
-                } else {
-                    throttle += 1
-                }
-                
-                change.onNext(())
+                event.onNext(())
             })
             .disposed(by: disposeBag)
     }
@@ -123,6 +102,29 @@ class ViewController: UIViewController {
     func clearStack(stack: UIStackView) {
         for view in stack.arrangedSubviews {
             view.isHidden = true
+        }
+    }
+    
+    func handleCounts() {
+        if regular >= regularStack.arrangedSubviews.count - 1 {
+            regular = 0
+            clearStack(stack: regularStack)
+        } else {
+            regular += 1
+        }
+        
+        if debounce >= debounceStack.arrangedSubviews.count - 1 {
+            debounce = 0
+            clearStack(stack: debounceStack)
+        } else {
+            debounce += 1
+        }
+        
+        if throttle >= throttleStack.arrangedSubviews.count - 1 {
+            throttle = 0
+            clearStack(stack: throttleStack)
+        } else {
+            throttle += 1
         }
     }
 }
