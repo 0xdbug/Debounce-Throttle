@@ -28,11 +28,40 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        prepareStackViews()
+        setupGesture()
+        setupEvenSubscirptions()
         
-        prepare(superview: regularStack)
-        prepare(superview: debounceStack)
-        prepare(superview: throttleStack)
+    }
+    
+    func setupEvenSubscirptions() {
+        change.subscribe(onNext: { [self] _ in
+            if regular < regularStack.arrangedSubviews.count {
+                regularStack.arrangedSubviews[regular].isHidden = false
+            }
+        })
+        .disposed(by: disposeBag)
         
+        change
+            .debounce(.microseconds(50000), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [self] _ in
+                if debounce < debounceStack.arrangedSubviews.count {
+                    debounceStack.arrangedSubviews[debounce].isHidden = false
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        change
+            .throttle(.microseconds(50000), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [self] _ in
+                if throttle < throttleStack.arrangedSubviews.count {
+                    throttleStack.arrangedSubviews[throttle].isHidden = false
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func setupGesture() {
         let panGesture = draggableView.rx
             .panGesture()
             .share(replay: 1)
@@ -67,31 +96,12 @@ class ViewController: UIViewController {
                 change.onNext(())
             })
             .disposed(by: disposeBag)
-        
-        change.subscribe(onNext: { [self] _ in
-            if regular < regularStack.arrangedSubviews.count {
-                regularStack.arrangedSubviews[regular].isHidden = false
-            }
-        })
-        .disposed(by: disposeBag)
-        
-        change
-            .debounce(.microseconds(50000), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [self] _ in
-                if debounce < debounceStack.arrangedSubviews.count {
-                    debounceStack.arrangedSubviews[debounce].isHidden = false
-                }
-            })
-            .disposed(by: disposeBag)
-        
-        change
-            .throttle(.microseconds(50000), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [self] _ in
-                if throttle < throttleStack.arrangedSubviews.count {
-                    throttleStack.arrangedSubviews[throttle].isHidden = false
-                }
-            })
-            .disposed(by: disposeBag)
+    }
+    
+    func prepareStackViews() {
+        prepare(superview: regularStack)
+        prepare(superview: debounceStack)
+        prepare(superview: throttleStack)
     }
     
     func prepare(superview: UIStackView) {
