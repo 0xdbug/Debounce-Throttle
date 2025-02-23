@@ -21,9 +21,7 @@ class ViewController: UIViewController {
     
     let event = PublishSubject<Void>()
     
-    var regular = 0
-    var debounce = 0
-    var throttle = 0
+    var currentBarIndex = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,27 +32,21 @@ class ViewController: UIViewController {
     
     func setupEventSubscriptions() {
         event.subscribe(onNext: { [self] _ in
-            if regular < regularStack.arrangedSubviews.count {
-                regularStack.arrangedSubviews[regular].isHidden = false
-            }
+            regularStack.arrangedSubviews[currentBarIndex].backgroundColor = .red
         })
         .disposed(by: disposeBag)
         
         event
             .debounce(.microseconds(50000), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [self] _ in
-                if debounce < debounceStack.arrangedSubviews.count {
-                    debounceStack.arrangedSubviews[debounce].isHidden = false
-                }
+                debounceStack.arrangedSubviews[currentBarIndex].backgroundColor = .red
             })
             .disposed(by: disposeBag)
         
         event
             .throttle(.microseconds(50000), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [self] _ in
-                if throttle < throttleStack.arrangedSubviews.count {
-                    throttleStack.arrangedSubviews[throttle].isHidden = false
-                }
+                throttleStack.arrangedSubviews[currentBarIndex].backgroundColor = .red
             })
             .disposed(by: disposeBag)
     }
@@ -84,11 +76,10 @@ class ViewController: UIViewController {
     }
     
     func prepare(superview: UIStackView) {
-        for i in 0..<30 {
+        for _ in 0..<30 {
             let view = UIView()
-            view.backgroundColor = .red
+            view.backgroundColor = .clear
             view.translatesAutoresizingMaskIntoConstraints = false
-            view.isHidden = true
             
             superview.addArrangedSubview(view)
             
@@ -101,30 +92,18 @@ class ViewController: UIViewController {
     
     func clearStack(stack: UIStackView) {
         for view in stack.arrangedSubviews {
-            view.isHidden = true
+            view.backgroundColor = .clear
         }
     }
     
     func handleCounts() {
-        if regular >= regularStack.arrangedSubviews.count - 1 {
-            regular = 0
+        if currentBarIndex >= 29 {
+            currentBarIndex = 0
             clearStack(stack: regularStack)
-        } else {
-            regular += 1
-        }
-        
-        if debounce >= debounceStack.arrangedSubviews.count - 1 {
-            debounce = 0
             clearStack(stack: debounceStack)
-        } else {
-            debounce += 1
-        }
-        
-        if throttle >= throttleStack.arrangedSubviews.count - 1 {
-            throttle = 0
             clearStack(stack: throttleStack)
         } else {
-            throttle += 1
+            currentBarIndex += 1
         }
     }
 }
