@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7075E66E2D6B7BDB0079CF26 /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = 7075E66D2D6B7BDB0079CF26 /* RxGesture */; };
+		7089CE582D6B77080076A3D2 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 7089CE572D6B77080076A3D2 /* RxCocoa */; };
+		7089CE5A2D6B77080076A3D2 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7089CE592D6B77080076A3D2 /* RxSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		7089CE3E2D6B72670076A3D2 /* Debounce Throttle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Debounce Throttle.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7089CE5A2D6B77080076A3D2 /* RxSwift in Frameworks */,
+				7075E66E2D6B7BDB0079CF26 /* RxGesture in Frameworks */,
+				7089CE582D6B77080076A3D2 /* RxCocoa in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +87,9 @@
 			);
 			name = "Debounce Throttle";
 			packageProductDependencies = (
+				7089CE572D6B77080076A3D2 /* RxCocoa */,
+				7089CE592D6B77080076A3D2 /* RxSwift */,
+				7075E66D2D6B7BDB0079CF26 /* RxGesture */,
 			);
 			productName = "Debounce Throttle";
 			productReference = 7089CE3E2D6B72670076A3D2 /* Debounce Throttle.app */;
@@ -107,6 +119,10 @@
 			);
 			mainGroup = 7089CE352D6B72670076A3D2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7089CE562D6B77080076A3D2 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				7075E66C2D6B7BDB0079CF26 /* XCRemoteSwiftPackageReference "RxGesture" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7089CE3F2D6B72670076A3D2 /* Products */;
 			projectDirPath = "";
@@ -335,6 +351,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7075E66C2D6B7BDB0079CF26 /* XCRemoteSwiftPackageReference "RxGesture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxGesture.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.4;
+			};
+		};
+		7089CE562D6B77080076A3D2 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7075E66D2D6B7BDB0079CF26 /* RxGesture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7075E66C2D6B7BDB0079CF26 /* XCRemoteSwiftPackageReference "RxGesture" */;
+			productName = RxGesture;
+		};
+		7089CE572D6B77080076A3D2 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7089CE562D6B77080076A3D2 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		7089CE592D6B77080076A3D2 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7089CE562D6B77080076A3D2 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7089CE362D6B72670076A3D2 /* Project object */;
 }
