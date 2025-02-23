@@ -30,11 +30,11 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         prepareStackViews()
         setupGesture()
-        setupEvenSubscirptions()
+        setupEventSubscriptions()
         
     }
     
-    func setupEvenSubscirptions() {
+    func setupEventSubscriptions() {
         change.subscribe(onNext: { [self] _ in
             if regular < regularStack.arrangedSubviews.count {
                 regularStack.arrangedSubviews[regular].isHidden = false
